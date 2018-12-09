@@ -25,6 +25,9 @@ SECRET_KEY = '@r-rz3%^=6ud0ucl$e*2$c3qo7p@3nrs_ea802u#3%m5^y(*#6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+import sys
+sys.path.insert(0,os.path.join(BASE_DIR,'apps'))
+
 ALLOWED_HOSTS = []
 
 
@@ -37,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
