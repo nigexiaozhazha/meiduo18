@@ -29,11 +29,12 @@ import sys
 
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['api.meiduo.site', '127.0.0.1']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'users.apps.UsersConfig',
+    'corsheaders',# 解决跨域问题的模块
 ]
 
 MIDDLEWARE = [
@@ -197,3 +199,12 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'users.User'  # 用自己定义的用户模型类生成对应的表
+
+# CORS 添加白名单
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:8080',
+    'localhost:8080',
+    'www.meiduo.site:8080',
+    'api.meiduo.site:8000'
+)
+CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
