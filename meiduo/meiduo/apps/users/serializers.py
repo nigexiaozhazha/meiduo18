@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from users.models import User
 from django_redis import get_redis_connection
+from rest_framework_jwt.settings import api_settings
 
 import re
 
@@ -10,10 +11,11 @@ class UserSerilizer(serializers.ModelSerializer):
     password2 = serializers.CharField(max_length=20, min_length=8, write_only=True)
     sms_code = serializers.CharField(max_length=6, min_length=6, write_only=True)
     allow = serializers.CharField(write_only=True)
+    token = serializers.CharField(read_only=True)# 额外添加token字段
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'mobile', 'email', 'password', 'password2', 'sms_code', 'allow')
+        fields = ('id', 'username', 'mobile', 'email', 'password', 'password2', 'sms_code', 'allow','token')
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -85,5 +87,15 @@ class UserSerilizer(serializers.ModelSerializer):
         # user = User.objects.create(username=validated_data['username'])
         # user.set_password(validated_data['password'])
         # user.save()
+
+        # 生成Toke值
+        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+        payload = jwt_payload_handler(user)
+        token = jwt_encode_handler(payload)
+
+        # 用户对象额外添加token属性
+        user.token = token
 
         return user
